@@ -233,12 +233,16 @@ def berkeley_autolab_ur5_dataset_transform(
     # make gripper action absolute action, +1 = open, 0 = close
     gripper_action = trajectory["action"]["gripper_closedness_action"]
     gripper_action = rel2abs_gripper_actions(gripper_action)
+    
+    terminate_episode = trajectory["action"]["terminate_episode"]
+    terminate_episode = tf.cast(terminate_episode, tf.float32)
 
     trajectory["action"] = tf.concat(
         (
             trajectory["action"]["world_vector"],
             trajectory["action"]["rotation_delta"],
             gripper_action[:, None],
+            terminate_episode[:, None], # NOTE: added 
         ),
         axis=-1,
     )

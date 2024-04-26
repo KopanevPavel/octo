@@ -36,10 +36,10 @@ def make_oxe_dataset_kwargs(
         )
 
     # with EEF_POS actions, only the last action dimension (the gripper) is absolute
-    dataset_kwargs["absolute_action_mask"] = [False] * 6 + [True]
+    dataset_kwargs["absolute_action_mask"] = [False] * 6 + [True] + [True] # NOTE: Changed!!!!!!!
 
     # we also want to skip normalizing the gripper action
-    dataset_kwargs["action_normalization_mask"] = [True] * 6 + [False]
+    dataset_kwargs["action_normalization_mask"] = [True] * 6 + [False] + [False] # NOTE: Changed!!!!!!!
 
     # adjust loaded camera views
     if missing_keys := (set(load_camera_views) - set(dataset_kwargs["image_obs_keys"])):
