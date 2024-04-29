@@ -1,6 +1,6 @@
 import copy
 import logging
-from typing import Any, Dict, List, Sequence, Tuple, Union
+from typing import Any, Dict, List, Sequence, Tuple, Union, Optional
 
 from octo.data.oxe.oxe_dataset_configs import ActionEncoding, OXE_DATASET_CONFIGS
 from octo.data.oxe.oxe_dataset_mixes import OXE_NAMED_MIXES
@@ -16,6 +16,8 @@ def make_oxe_dataset_kwargs(
     load_proprio: bool = True,
     load_language: bool = True,
     action_proprio_normalization_type: NormalizationType = NormalizationType.NORMAL,
+    normalization_skip_keys: Optional[Sequence[str]] = None,
+    
 ) -> Dict[str, Any]:
     """Generates dataset kwargs for a given dataset from Open X-Embodiment. The returned kwargs can be passed
     directly into `octo.data.dataset.make_dataset_from_rlds`.
@@ -73,6 +75,9 @@ def make_oxe_dataset_kwargs(
     del dataset_kwargs["action_encoding"]
 
     dataset_kwargs["standardize_fn"] = OXE_STANDARDIZATION_TRANSFORMS[name]
+    
+    if normalization_skip_keys:
+        dataset_kwargs["norm_skip_keys"] = normalization_skip_keys
 
     return {"name": name, "data_dir": data_dir, **dataset_kwargs}
 
@@ -85,6 +90,7 @@ def make_oxe_dataset_kwargs_and_weights(
     load_proprio: bool = True,
     load_language: bool = True,
     action_proprio_normalization_type: NormalizationType = NormalizationType.NORMAL,
+    normalization_skip_keys: Optional[Sequence[str]] = None,
 ) -> Tuple[Dict[str, Any], List[float]]:
     """
     Generates dataset kwargs for a given dataset mix from the Open X-Embodiment dataset. The returned kwargs
@@ -126,6 +132,7 @@ def make_oxe_dataset_kwargs_and_weights(
                     load_proprio,
                     load_language,
                     action_proprio_normalization_type,
+                    normalization_skip_keys
                 )
             )
             weights.append(weight)
