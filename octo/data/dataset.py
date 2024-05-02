@@ -21,6 +21,7 @@ from octo.data.utils.data_utils import (
 )
 from octo.utils.spec import ModuleSpec
 
+tf.config.set_visible_devices([], "GPU")
 
 def apply_trajectory_transforms(
     dataset: dl.DLataset,
@@ -368,6 +369,7 @@ def make_dataset_from_rlds(
         return traj
 
     builder = tfds.builder(name, data_dir=data_dir)
+    # builder = tfds.builder_from_directory(builder_dir='/workspace/LLM/RoboVLA/data/openx/berkeley_autolab_ur5/0.1.0')
 
     # load or compute dataset statistics
     if isinstance(dataset_statistics, str):
